@@ -1,10 +1,15 @@
-# Vue 3 + Typescript + Vite + pinia + vue-router template
+# danmuji-test
 
-### (自用)vite + vue3 template
+一个无聊的时候写的，预期是*高度可自定义化、数据流化的*弹幕姬
 
-**包含以下package：**
+dev:
 
-- vite + vue3 + pnpm
-- pinia
-- vue-router
-- eslint config(simple)
+```
+pnpm run dev
+```
+
+build:
+
+```
+pnpm run build
+```
