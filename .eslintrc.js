@@ -5,6 +5,8 @@ module.exports = {
         browser: true,
         node: true,
         'vue/setup-compiler-macros': true,
+        worker: true,
+        serviceworker: true,
     },
     plugins: ['vue'],
     extends: [
@@ -33,6 +35,7 @@ module.exports = {
         }],
         camelcase: 'off',
         '@typescript-eslint/camelcase': 0,
+        "@typescript-eslint/ban-ts-comment": 0,
         "object-shorthand": "error",
     },
 };
