@@ -12,7 +12,9 @@ module.exports = {
     extends: [
         'plugin:vue/vue3-recommended',
         '@vue/typescript/recommended',
-        'eslint:recommended'
+        'eslint:recommended',
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     parserOptions: {
         ecmaVersion: 2020,
@@ -37,5 +39,6 @@ module.exports = {
         '@typescript-eslint/camelcase': 0,
         "@typescript-eslint/ban-ts-comment": 0,
         "object-shorthand": "error",
+        "@typescript-eslint/no-explicit-any": 0,
     },
 };

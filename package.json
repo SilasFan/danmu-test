@@ -9,6 +9,10 @@
     "serve:dist": "serve dist"
   },
   "dependencies": {
+    "bilibili-live-ws": "^6.1.0",
+    "buffer": "^6.0.3",
+    "events": "^3.3.0",
+    "pako": "^2.0.4",
     "pinia": "^2.0.13",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"
