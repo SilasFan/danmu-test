@@ -1,6 +1,6 @@
 import {KeepLiveWS} from 'bilibili-live-ws/browser';
 import {EventEmitter} from 'events';
-import {DanmakuPlugin, DanmakuWSOpen, FlattedDanmaku, VIPTYPE} from './types';
+import {DanmakuPlugin, DanmakuPush, DanmakuWSOpen, FlattedDanmaku, VIPTYPE} from './types';
 
 const flatDanmaku = (raw: any): FlattedDanmaku => {
     return {
@@ -17,12 +17,14 @@ const flatDanmaku = (raw: any): FlattedDanmaku => {
 export class DanmakuService extends EventEmitter {
     live: KeepLiveWS | null = null;
     danmakuPlugins: DanmakuPlugin[] = [];
+    composedPlugins: DanmakuPlugin | null = null;
 
     constructor() {
         super();
     }
 
     public initService(roomid: number) {
+        this.composePlugins();
         this.live = new KeepLiveWS(roomid);
         this.live.on('open', () => {
             console.log('ws open');
@@ -31,12 +33,24 @@ export class DanmakuService extends EventEmitter {
 
         this.live.on('DANMU_MSG', (data) => {
             const { info, } = data;
-            console.log(flatDanmaku(info));
+            const danmaku = (this.composedPlugins as DanmakuPlugin)(flatDanmaku(info));
+            this.emit(DanmakuPush, danmaku);
+            console.log(danmaku);
         });
     }
 
     public useDanmakuPlugin(plugin: DanmakuPlugin) {
         this.danmakuPlugins.push(plugin);
         return this;
+    }
+
+    private composePlugins() {
+        this.composedPlugins = (danmaku: FlattedDanmaku | null): FlattedDanmaku | null => {
+            for(const plugin of this.danmakuPlugins) {
+                if(!danmaku) return null;
+                danmaku = plugin(danmaku);
+            }
+            return danmaku;
+        };
     }
 }
