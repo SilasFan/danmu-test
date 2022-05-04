@@ -1,17 +1,35 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import {onBeforeUnmount, onMounted} from 'vue';
 import {DanmakuService} from '../core';
+import {useDanmaku} from '../store/Danmaku';
+import {DanmakuPush, FlattedDanmaku} from '../core/types';
+import DanmakuItem from '../render/DanmakuItem.vue';
 
-const count = ref(0);
+const service = new DanmakuService();
+const danmakuStore = useDanmaku();
+const {
+        danmakuList,
+        pushDanmaku,
+        clearDanmakuList,
+      } = danmakuStore;
 onMounted(() => {
-  const service = new DanmakuService();
-  service.initService(22886883);
+  service.initService(22389319);
+  service.on(DanmakuPush, (danmaku: FlattedDanmaku) => {
+    pushDanmaku(danmaku);
+  });
+});
+
+onBeforeUnmount(() => {
+  clearDanmakuList();
 });
 </script>
 
 <template>
-  <div>hello</div>
-  <div>hi {{ count }}</div>
+  <DanmakuItem
+    v-for="dan in danmakuList"
+    :key="dan.count"
+    :danmaku="dan"
+  />
 </template>
 
 <style scoped>

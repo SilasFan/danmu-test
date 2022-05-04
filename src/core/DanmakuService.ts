@@ -2,10 +2,12 @@ import {KeepLiveWS} from 'bilibili-live-ws/browser';
 import {EventEmitter} from 'events';
 import {DanmakuPlugin, DanmakuPush, DanmakuWSOpen, FlattedDanmaku, VIPTYPE} from './types';
 
-const flatDanmaku = (raw: any): FlattedDanmaku => {
+const flatDanmaku = (raw: any, count: number): FlattedDanmaku => {
     return {
+        count,
         textContent: raw[1],
         user: {
+            uid: raw[2][0],
             name: raw[2][1],
             vip: raw[3][10] as VIPTYPE,
             medalName: raw[3][1],
@@ -18,6 +20,7 @@ export class DanmakuService extends EventEmitter {
     live: KeepLiveWS | null = null;
     danmakuPlugins: DanmakuPlugin[] = [];
     composedPlugins: DanmakuPlugin | null = null;
+    danmakuCount = 0;
 
     constructor() {
         super();
@@ -32,9 +35,11 @@ export class DanmakuService extends EventEmitter {
         });
 
         this.live.on('DANMU_MSG', (data) => {
+            this.danmakuCount++;
             const { info, } = data;
-            const danmaku = (this.composedPlugins as DanmakuPlugin)(flatDanmaku(info));
-            this.emit(DanmakuPush, danmaku);
+            console.log(info);
+            const danmaku = (this.composedPlugins as DanmakuPlugin)(flatDanmaku(info, this.danmakuCount));
+            if(danmaku) this.emit(DanmakuPush, danmaku);
             console.log(danmaku);
         });
     }

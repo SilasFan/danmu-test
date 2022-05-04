@@ -11,13 +11,17 @@ export enum VIPTYPE {
 }
 
 export interface FlattedDanmaku {
+    count: number;
     textContent: string;
     user: {
-      name: string;
-      vip: VIPTYPE;
-      medalName: string;
-      medalLevel: number;
+        uid: string;
+        name: string;
+        vip: VIPTYPE;
+        medalName: string;
+        medalLevel: number;
     };
+
+    [key: string]: any;
 }
 
 export interface DanmakuPlugin {
